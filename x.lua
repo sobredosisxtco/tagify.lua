@@ -13,7 +13,7 @@ red = Color3.fromRGB(248, 113, 113)
 }
 math.randomseed(tick())
 local _003 = {}
-for _004 in ("acdefghjklmnopqrstvwxyz"):gmatch(".") do
+for _004 in ("acdefghjklmnopqrtvwxyz"):gmatch(".") do
 table.insert(_003, _004)
 end
 local _005 = {"<i></i>", "<b></b>", "<s></s>", "<u></u>"}
