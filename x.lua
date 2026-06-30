@@ -487,7 +487,7 @@ end
 _092()
 end
 _094("tagify")
-_090(_006("Hello!))
+_090(_006("xtemplate"))
 _068:GetPropertyChangedSignal("Text"):Connect(_092)
 _063.MouseButton1Click:Connect(function() _094("tagify") end)
 _065.MouseButton1Click:Connect(function() _094("untagify") end)
