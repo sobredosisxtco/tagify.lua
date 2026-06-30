@@ -938,15 +938,3 @@ end
 _106.Text = "How to use Tagify?"
 _107.Text = "Tagify: Lets you bypass text using rich text systems. For example, in TCO you paste it onto a spray or sign and its already bypassed. Untagify: Makes the exact opposite function."
 _113()
-end
-local _000 = {
-"#######   ###    #####   ### ####### #     #",
-"   #     #   #  #         #  #        #   # ",
-"   #    ####### #   ###   #  #####     # #  ",
-"   #    #     # #     #   #  #          #   ",
-"   #    #     #  #####   ### #          #   "
-}
-for _, systemeslesbiana in ipairs(_000) do
-print(systemeslesbiana)
-task.wait(0.3)
-end
