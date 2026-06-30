@@ -20,25 +20,48 @@ local _005 = {"<i></i>", "<b></b>", "<s></s>", "<u></u>"}
 local function _006(_007)
 if _007 == "" then return "" end
 local _008 = {}
-for _, _009 in utf8.codes(_007) do
-table.insert(_008, utf8.char(_009))
-end
-local _010, _011 = {}, 0
-for _012 = 1, #_008 do
-local _013 = _008[_012]
-if _011 >= 1 or math.random() < 0.52 then
-local _014 = _003[math.random(#_003)]
-table.insert(_010, "<" .. _014 .. ">" .. _013 .. "</" .. _014 .. ">")
-_011 = 0
+local _009 = 1
+while _009 <= #_007 do
+if _007:sub(_009, _009) == "<" then
+local _010 = _007:find(">", _009, true)
+if _010 then
+table.insert(_008, {true, _007:sub(_009, _010)})
+_009 = _010 + 1
 else
-table.insert(_010, _013)
-_011 += 1
+table.insert(_008, {false, "<"})
+_009 += 1
 end
-if _012 < #_008 and math.random() < 0.16 then
-table.insert(_010, _005[math.random(#_005)])
+else
+local _010, _011 = _007:find(utf8.charpattern, _009)
+if _010 then
+table.insert(_008, {false, _007:sub(_010, _011)})
+_009 = _011 + 1
+else
+_009 += 1
 end
 end
-return table.concat(_010)
+end
+local _012, _013 = {}, 0
+for _014 = 1, #_008 do
+local _015 = _008[_014]
+if _015[1] then
+table.insert(_012, _015[2])
+else
+local _016 = _015[2]
+if _013 >= 1 or math.random() < 0.52 then
+local _017 = _003[math.random(#_003)]
+table.insert(_012, "<" .. _017 .. ">" .. _016 .. "</" .. _017 .. ">")
+_013 = 0
+else
+table.insert(_012, _016)
+_013 += 1
+end
+if _014 < #_008 and not _008[_014 + 1][1] and math.random() < 0.16 then
+table.insert(_012, _005[math.random(#_005)])
+end
+end
+end
+return table.concat(_012)
 end
 local function _013(_014)
 if _014 == "" then return "" end
@@ -133,7 +156,7 @@ Size = UDim2.new(1, 0, 0, 0),
 AutomaticSize = Enum.AutomaticSize.Y,
 LayoutOrder = 1,
 BackgroundTransparency = 1,
-Text = "Parece que ya has cargado Tagify.",
+Text = "Tagify is already loaded.",
 TextColor3 = _002.txt,
 TextSize = _036 and 13 or 14,
 Font = Enum.Font.GothamBold,
@@ -145,7 +168,7 @@ Size = UDim2.new(1, 0, 0, 0),
 AutomaticSize = Enum.AutomaticSize.Y,
 LayoutOrder = 2,
 BackgroundTransparency = 1,
-Text = "Quieres volver a cargarlo?",
+Text = "Do you want to reload it?",
 TextColor3 = _002.dim,
 TextSize = _036 and 11 or 12,
 Font = Enum.Font.Code,
@@ -171,7 +194,7 @@ AutoButtonColor = false
 _022(_047, 6)
 return _047
 end
-local _048 = _043("Si", _002.purple, _002.txt)
+local _048 = _043("Yes", _002.purple, _002.txt)
 local _049 = _043("No", _002.border, _002.dim)
 local _050 = Instance.new("BindableEvent")
 _048.MouseButton1Click:Connect(function() _050:Fire(true) end)
@@ -182,6 +205,8 @@ _050:Destroy()
 if not _051 then return end
 _037:Destroy()
 end
+local _038 = {[12943245078] = true, [12943247001] = true, [11137575513] = true}
+local _039 = _038[game.PlaceId] == true
 if _036 then
 local _041 = Instance.new("ScreenGui")
 _041.Name = "TagifyGUI"
@@ -326,12 +351,13 @@ BackgroundTransparency = 1
 })
 local _070 = _015("TextLabel", _069, {
 AnchorPoint = Vector2.new(0, 0.5),
-Size = UDim2.new(0, 18, 0, 18),
+Size = UDim2.new(0, 0, 0, 18),
+AutomaticSize = Enum.AutomaticSize.X,
 Position = UDim2.new(0, 0, 0.5, 0),
 BackgroundTransparency = 1,
-Text = "!",
+Text = "! Will not work properly",
 TextColor3 = _002.red,
-TextSize = 16,
+TextSize = 8,
 Font = Enum.Font.GothamBold,
 Visible = false
 })
@@ -433,12 +459,12 @@ end
 local function _092()
 local _093 = 0
 for _ in _068.Text:gmatch("%d") do _093 += 1 end
-_070.Visible = (_093 > 2)
 if _085 == "tagify" then
 _090(_006(_068.Text))
 else
 _090(_013(_068.Text))
 end
+_070.Visible = (_093 > 2) or (_039 and #_086 > 256)
 end
 local function _094(_095)
 _085 = _095
@@ -461,7 +487,7 @@ end
 _092()
 end
 _094("tagify")
-_090(_006("Hello!"))
+_090(_006("xtemplate"))
 _068:GetPropertyChangedSignal("Text"):Connect(_092)
 _063.MouseButton1Click:Connect(function() _094("tagify") end)
 _065.MouseButton1Click:Connect(function() _094("untagify") end)
@@ -471,7 +497,7 @@ end)
 _079.MouseButton1Click:Connect(function()
 if _086 == "" then return end
 pcall(setclipboard, _086)
-_079.Text = "copiado!"
+_079.Text = "copied!"
 _079.TextColor3 = _002.green
 _080.Color = _002.green
 task.delay(1.8, function()
@@ -650,12 +676,13 @@ BackgroundTransparency = 1
 })
 local _070 = _015("TextLabel", _069, {
 AnchorPoint = Vector2.new(0, 0.5),
-Size = UDim2.new(0, 18, 0, 18),
+Size = UDim2.new(0, 0, 0, 18),
+AutomaticSize = Enum.AutomaticSize.X,
 Position = UDim2.new(0, 0, 0.5, 0),
 BackgroundTransparency = 1,
-Text = "!",
+Text = "! Will not work properly",
 TextColor3 = _002.red,
-TextSize = 18,
+TextSize = 9,
 Font = Enum.Font.GothamBold,
 Visible = false
 })
@@ -757,12 +784,12 @@ end
 local function _092()
 local _093 = 0
 for _ in _068.Text:gmatch("%d") do _093 += 1 end
-_070.Visible = (_093 > 2)
 if _085 == "tagify" then
 _090(_006(_068.Text))
 else
 _090(_013(_068.Text))
 end
+_070.Visible = (_093 > 2) or (_039 and #_086 > 256)
 end
 local function _094(_095)
 _085 = _095
@@ -866,7 +893,7 @@ Size = UDim2.new(1, 0, 0, 0),
 AutomaticSize = Enum.AutomaticSize.Y,
 LayoutOrder = 1,
 BackgroundTransparency = 1,
-Text = "templatetext",
+Text = "xtemplate",
 TextColor3 = _002.txt,
 TextSize = _036 and 12 or 13,
 Font = Enum.Font.GothamBold,
@@ -878,7 +905,7 @@ Size = UDim2.new(1, 0, 0, 0),
 AutomaticSize = Enum.AutomaticSize.Y,
 LayoutOrder = 2,
 BackgroundTransparency = 1,
-Text = "templatedesc",
+Text = "xtemplate",
 TextColor3 = _002.dim,
 TextSize = _036 and 10 or 11,
 Font = Enum.Font.Code,
@@ -911,3 +938,15 @@ end
 _106.Text = "How to use Tagify?"
 _107.Text = "Tagify: Lets you bypass text using rich text systems. For example, in TCO you paste it onto a spray or sign and its already bypassed. Untagify: Makes the exact opposite function."
 _113()
+end
+local _000 = {
+"#######   ###    #####   ### ####### #     #",
+"   #     #   #  #         #  #        #   # ",
+"   #    ####### #   ###   #  #####     # #  ",
+"   #    #     # #     #   #  #          #   ",
+"   #    #     #  #####   ### #          #   "
+}
+for _, systemeslesbiana in ipairs(_000) do
+print(systemeslesbiana)
+task.wait(0.3)
+end
